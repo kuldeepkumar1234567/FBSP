@@ -11,6 +11,7 @@
         <p>Surname</p><input type="text" required placeholder="Enter Your Surname" id="inputsurname">
         <button type="submit">Submit</button>
     </form>
+    
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
         import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
@@ -24,34 +25,33 @@
             messagingSenderId: "975968791658",
             appId: "1:975968791658:web:77676d5ac71204b0546e13",
             measurementId: "G-RPRRVS70DP"
-          };
+        };
 
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
         document.addEventListener("DOMContentLoaded", () => {
-            const name = document.getElementById('name');
-            const surname = document.getElementById('surname')
+            const nameInput = document.getElementById('name');
+            const surnameInput = document.getElementById('inputsurname');
             const form = document.getElementById('form');
 
             form.addEventListener("submit", (e) => {
                 e.preventDefault();
 
-                const name = name.value;
-                const surname = surname.value;
+                const name = nameInput.value;
+                const surname = surnameInput.value;
 
                 const userRef = ref(db, "Users/");
-                const newuser = push(userRef);
+                const newUser = push(userRef);
 
-                set(newuser, {
-                    name: name
-                })
-                set(newsurname, {
+                set(newUser, {
+                    name: name,
                     surname: surname
-                })
+                });
+
                 form.reset();
-            })
-        })
+            });
+        });
     </script>
 </body>
 </html>
