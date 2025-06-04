@@ -1,51 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Comment Form</title>
 </head>
 <body>
-    <form id="Commentsection">
-    <input type="text" placeholder="Write Comment" required id="Comment">
+  <form id="Commentsection">
+    <input type="text" placeholder="Write Comment" required id="Comment" />
     <button type="submit" id="submit">Submit</button>
-    </form>
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
-        import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
+  </form>
 
-        const firebaseConfig = {
-  apiKey: "AIzaSyDQt4rKP3qlTPnmPsHExXBjfo0EHp1ZImA",
-  authDomain: "aikocls.firebaseapp.com",
-  databaseURL: "https://aikocls-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "aikocls",
-  storageBucket: "aikocls.firebasestorage.app",
-  messagingSenderId: "975968791658",
-  appId: "1:975968791658:web:77676d5ac71204b0546e13",
-  measurementId: "G-RPRRVS70DP"
-};
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
+    import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDQt4rKP3qlTPnmPsHExXBjfo0EHp1ZImA",
+      authDomain: "aikocls.firebaseapp.com",
+      databaseURL: "https://aikocls-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "aikocls",
+      storageBucket: "aikocls.appspot.com", // ✅ fixed this line
+      messagingSenderId: "975968791658",
+      appId: "1:975968791658:web:77676d5ac71204b0546e13",
+      measurementId: "G-RPRRVS70DP"
+    };
 
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
     document.addEventListener("DOMContentLoaded", () => {
-        const InputComment = document.getElementById('Comment');
-        const form = document.getElementById('Commentsection');
+      const inputComment = document.getElementById('Comment');
+      const form = document.getElementById('Commentsection');
 
-        form.addEventListener("submit", (e) => {
-            e.preventDefault();
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
 
-            const Comment = InputComment.value;
+        const comment = inputComment.value.trim();
+        if (!comment) return; // ignore empty/whitespace input
 
-            const userref = ref(db, "Users/");
-            const newuser = push(userref);
+        const userRef = ref(db, "Users/");
+        const newUser = push(userRef);
 
-            set(newuser, {
-                Comment: Comment
-            })
-            form.reset();
-        })
-    })
-    </script>
+        set(newUser, {
+          Comment: comment,
+          timestamp: new Date().toISOString()
+        });
+
+        form.reset(); // simple reset with no alert
+      });
+    });
+  </script>
 </body>
 </html>
