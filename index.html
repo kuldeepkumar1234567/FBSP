@@ -8,6 +8,7 @@
 <body>
     <form id="form">
         <p>Name:</p><input type="text" required placeholder="Enter Your Name" id="inputname">
+        <p>Surname</p><input type="text" required placeholder="Enter Your Surname" id="inputsurname">
         <button type="submit">Submit</button>
     </form>
     <script type="module">
@@ -29,19 +30,24 @@
         const db = getDatabase(app);
 
         document.addEventListener("DOMContentLoaded", () => {
-            const formname = document.getElementById('inputname');
+            const name = document.getElementById('name');
+            const surname = document.getElementById('surname')
             const form = document.getElementById('form');
 
             form.addEventListener("submit", (e) => {
                 e.preventDefault();
 
-                const name = formname.value;
+                const name = name.value;
+                const surname = surname.value;
 
                 const userRef = ref(db, "Users/");
                 const newuser = push(userRef);
 
                 set(newuser, {
                     name: name
+                })
+                set(newsurname, {
+                    surname: surname
                 })
                 form.reset();
             })
