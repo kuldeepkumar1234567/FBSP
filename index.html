@@ -1,58 +1,51 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Simple Firebase Form</title>
-  <script type="module">
-    // Import Firebase files
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
-    import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
-
-    // Replace this with your own Firebase project config
-    const firebaseConfig = {
-  apiKey: "AIzaSyDQt4rKP3qlTPnmPsHExXBjfo0EHp1ZImA",
-  authDomain: "aikocls.firebaseapp.com",
-  databaseURL: "https://aikocls-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "aikocls",
-  storageBucket: "aikocls.firebasestorage.app",
-  messagingSenderId: "975968791658",
-  appId: "1:975968791658:web:77676d5ac71204b0546e13",
-  measurementId: "G-RPRRVS70DP"
-};
-
-    // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
-
-    // When form is submitted
-    window.addEventListener("DOMContentLoaded", () => {
-      const form = document.getElementById("dataForm");
-
-      form.addEventListener("submit", (e) => {
-        e.preventDefault();
-
-        const name = document.getElementById("name").value;
-        const email = document.getElementById("email").value;
-
-        const userRef = ref(db, 'users/');
-        const newUser = push(userRef);
-
-        // Save data to Firebase (no alert or message)
-        set(newUser, {
-          name: name,
-          email: email
-        });
-
-        form.reset(); // clear the form
-      });
-    });
-  </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
 </head>
 <body>
-  <h3>Enter Details</h3>
-  <form id="dataForm">
-    Name: <input type="text" id="name" required><br><br>
-    Email: <input type="email" id="email" required><br><br>
-    <button type="submit">Save</button>
-  </form>
+    <form id="form">
+        <p>Name:</p><input type="text" required placeholder="Enter Your Name" id="inputname">
+        <button type="submit">Submit</button>
+    </form>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
+        import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDQt4rKP3qlTPnmPsHExXBjfo0EHp1ZImA",
+            authDomain: "aikocls.firebaseapp.com",
+            databaseURL: "https://aikocls-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "aikocls",
+            storageBucket: "aikocls.firebasestorage.app",
+            messagingSenderId: "975968791658",
+            appId: "1:975968791658:web:77676d5ac71204b0546e13",
+            measurementId: "G-RPRRVS70DP"
+          };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const formname = document.getElementById('inputname');
+            const form = document.getElementById('form');
+
+            form.addEventListener("submit", (e) => {
+                e.preventDefault();
+
+                const name = formname.value;
+
+                const userRef = ref(db, "Users/");
+                const newuser = push(userRef);
+
+                set(newuser, {
+                    name: name
+                })
+                form.reset();
+            })
+        })
+    </script>
 </body>
 </html>
