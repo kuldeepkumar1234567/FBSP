@@ -1,55 +1,221 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Comment Form</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-attachment: fixed;
+    background-color: black;
+    background-image: url(https://images.ctfassets.net/nnkxuzam4k38/2SvDjcgyav5C1DOb79JKXl/d3b06db5bb6bdb4ab237f666b5b4980e/compute-ea4c57a4.png?w=3840&q=60&fm=webp);
+    background-size: cover;
+    background-position: center;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    color: rgb(0, 0, 0);
+}
+
+input {
+    width: 240px;
+    height: 35px;
+    border-radius: 8px;
+    border: none;
+    padding: 8px;
+    margin: 10px;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: rgb(255, 255, 255);
+    font-size: 16px;
+    transition: 0.3s;
+    outline: none;
+    box-shadow: 0 0 5px rgba(59, 155, 219, 0.3);
+}
+
+input::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+    text-align: center;
+}
+
+input:hover,
+input:focus {
+    width: 260px;
+    height: 40px;
+    box-shadow: 0 0 15px 5px rgba(59, 155, 219, 0.7);
+    background-color: rgb(0, 0, 0);
+}
+
+button {
+    width: 120px;
+    height: 35px;
+    background-color: #00bfff;
+    color: black;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+    box-shadow: 0 0 5px rgba(0, 191, 255, 0.4);
+}
+
+button:hover {
+    width: 130px;
+    height: 40px;
+    background-color: #1ec2ff;
+    box-shadow: 0 0 20px 5px rgba(0, 191, 255, 0.6);
+}
+
+div {
+    font-size: 28px;
+    background-color: rgb(0, 0, 0);
+    border-radius: 10px;
+    padding: 15px 30px;
+    margin-bottom: 20px;
+    color: rgb(255, 255, 255);
+    box-shadow: 0 0 10px rgb(231, 64, 64);
+}
+    </style>
 </head>
 <body>
-  <form id="Commentsection">
-    <input type="text" placeholder="Write Comment" required id="Comment" />
-    <button type="submit" id="submit">Submit</button>
-  </form>
+    <div>
+    <input type="search" placeholder="Type Name or Wish to Search" id="searchbar">
+    <button type="button" id="search" onclick="searchquery()">Search</button>
+    </div>
+    <div>
+    <form id="form">
+    <input type="text" required placeholder="Enter Your Name" id="name">
+    <input type="text" required placeholder="Enter Your Wish. Like - 'A Car'" id="wish">
+    <button id="submit" type="submit">Confirm</button>
+    </form>
+    </div>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
-    import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
+    <div id="output">
+        <h6>Wishes</h6>
+    </div>
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyDQt4rKP3qlTPnmPsHExXBjfo0EHp1ZImA",
-      authDomain: "aikocls.firebaseapp.com",
-      databaseURL: "https://aikocls-default-rtdb.asia-southeast1.firebasedatabase.app",
-      projectId: "aikocls",
-      storageBucket: "aikocls.appspot.com", // ✅ fixed this line
-      messagingSenderId: "975968791658",
-      appId: "1:975968791658:web:77676d5ac71204b0546e13",
-      measurementId: "G-RPRRVS70DP"
-    };
+    <script>
+        function searchquery() {
+            const searchinput = document.getElementById('searchbar').value.toLowerCase();
+            const entries = document.getElementsByTagName('li');
 
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
+            for (let li of entries) {
+            const text = li.textContent.toLowerCase();
+            if (text.includes(searchinput)) {
+                li.style.display = "block";
+            }
+            else {
+                li.style.display = "none";
+            }
+        }
+    }
+    </script>
 
-    document.addEventListener("DOMContentLoaded", () => {
-      const inputComment = document.getElementById('Comment');
-      const form = document.getElementById('Commentsection');
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
+        import { getDatabase, ref, push, set, onChildAdded, remove, update} from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
 
-      form.addEventListener("submit", (e) => {
-        e.preventDefault();
+        const firebaseConfig = {
+  apiKey: "AIzaSyDQt4rKP3qlTPnmPsHExXBjfo0EHp1ZImA",
+  authDomain: "aikocls.firebaseapp.com",
+  databaseURL: "https://aikocls-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "aikocls",
+  storageBucket: "aikocls.firebasestorage.app",
+  messagingSenderId: "975968791658",
+  appId: "1:975968791658:web:77676d5ac71204b0546e13",
+  measurementId: "G-RPRRVS70DP"
+};
 
-        const comment = inputComment.value.trim();
-        if (!comment) return; // ignore empty/whitespace input
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
 
-        const userRef = ref(db, "Users/");
-        const newUser = push(userRef);
+        let CurrentEditKey = null;
+        const time = new Date().toLocaleString();
 
-        set(newUser, {
-          Comment: comment,
-          timestamp: new Date().toISOString()
-        });
+        document.addEventListener("DOMContentLoaded", () => {
+            const wish = document.getElementById('wish');
+            const name = document.getElementById('name');
+            const form = document.getElementById('form');
+            const output = document.getElementById('output');
+            const userref = ref(db, "Details/");
 
-        form.reset(); // simple reset with no alert
-      });
-    });
-  </script>
+            form.addEventListener("submit", (e) => {
+                e.preventDefault();
+
+                const namevalue = name.value;
+                const wishvalue = wish.value;
+
+                if(CurrentEditKey) {
+                    const updateuserref = ref(db, "Details/" + CurrentEditKey);
+
+                    alert("wish Updated!");
+
+                    set(updateuserref, {
+                        Name : namevalue,
+                        Wish : wishvalue,
+                        Time : time
+                    })
+                }
+
+                else {
+                    const newuser = push(userref);
+
+                alert("Wish Added!");
+
+                set(newuser, {
+                    Name : namevalue,
+                    Wish : wishvalue,
+                    Time : time
+                })
+                }
+
+                form.reset();
+                CurrentEditKey = null;
+            })
+
+            onChildAdded(userref, (data) => {
+            const details = data.val();
+            const entry = document.createElement("li");
+            entry.textContent = `${details.Name} Wishes for ${details.Wish}`;
+            output.appendChild(entry);
+
+            const editBtn = document.createElement("Button");
+            editBtn.textContent = "✏️";
+            editBtn.style.marginLeft = "20px";
+
+            const timetag = document.createElement("b");
+            timetag.textContent = "Time : " + time;
+            timetag.style.marginLeft = "20px"; 
+
+            editBtn.addEventListener("click", () => {
+                name.value = details.Name;
+                wish.value = details.Wish;
+
+                CurrentEditKey = data.key;
+            })
+
+            const delBtn = document.createElement("Button");
+            delBtn.textContent = "❌";
+            delBtn.style.marginLeft = "10px";
+
+            delBtn.addEventListener("click", () => {
+            const thisentryref = ref(db, "Details/" + data.key);
+            remove(thisentryref);
+            entry.remove();
+            alert("Wish Deleted!");
+            })
+
+            entry.appendChild(delBtn);
+            entry.appendChild(editBtn);
+            entry.appendChild(timetag);
+            output.appendChild(entry);
+            })
+        })
+    </script>
 </body>
 </html>
